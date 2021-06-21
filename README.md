@@ -19,3 +19,7 @@ This script return PowerShell Objects for data, so you can use normal powershell
 .\Scrape-AzureStatusHistory.ps1 | ConvertTo-Json
 ```
 
+# Requisite
+
+- Windows 10 version 21H1
+- PowerShell 7.1
