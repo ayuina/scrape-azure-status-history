@@ -1,12 +1,22 @@
+<#
+    .SYNOPSIS
+    Scrape data from Azure Status History (https://status.azure.com/status/history/)
+
+    .DESCRIPTION
+    This script retrieved data from API which is invoked Azure Status History page and spec is not public.
+    The api doesn't return convenient format like json but HTML format.
+    So this script scrape and parse HTML data.
+
+#>
+
 
 function Main()
 {
-    Iterate-History
+    Iterate-HistoryPage
 }
 
-function Iterate-History()
+function Iterate-HistoryPage()
 {
-
     # page 1
     $result = Get-PageResult -page 1
     $pageCount = Get-PageCount $result
@@ -64,6 +74,11 @@ function Parse-HistoryPage($htmlContent)
             $body = $div.getElementsByTagName('div')[1]
             $record.title = $body.getElementsByTagName('h3')[0].innerText
             $record.content = $body.innerText
+
+            if($record.title -match "Tracking ID (?<tid>\w{4}-\w{3})")
+            {
+                $record.trackingId = $Matches['tid']
+            }
 
             Write-Output (New-Object -TypeName PSObject -Property $record)
         }
